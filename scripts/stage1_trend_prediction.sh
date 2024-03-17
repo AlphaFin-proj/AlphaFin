@@ -1,0 +1,5 @@
+cd src
+
+python stage1_trend_prediction/dataprocess_stockgpt.py
+
+python stage1_trend_prediction/test_strategy.py
