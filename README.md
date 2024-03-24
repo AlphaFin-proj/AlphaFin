@@ -77,3 +77,18 @@ Our Stock-Chain achieves the highest AR and maintains an upward trend, starting 
 ## Financial Q&A Cases
 
 ![image](assets/case_travel.png)
+
+## Citation
+
+If you use AlphaFin in your work, please cite our paper.
+
+```
+@misc{li2024alphafin,
+      title={AlphaFin: Benchmarking Financial Analysis with Retrieval-Augmented Stock-Chain Framework}, 
+      author={Xiang Li and Zhenyu Li and Chen Shi and Yong Xu and Qing Du and Mingkui Tan and Jun Huang and Wei Lin},
+      year={2024},
+      eprint={2403.12582},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL}
+}
+```
