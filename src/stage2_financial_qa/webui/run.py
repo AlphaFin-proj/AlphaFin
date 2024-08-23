@@ -5,6 +5,7 @@ from langchain.vectorstores import FAISS
 from langchain.embeddings.huggingface import HuggingFaceEmbeddings
 import torch
 import torch.nn as nn
+from fire import Fire
 
 from transformers import AutoModel, AutoTokenizer
 
@@ -146,10 +147,11 @@ method_map = {
     "仅检索知识文档": '3'
 }
 
-def main():
-    base_model_path = "/path/to/chatglm2_6b"
-    lora_ckpt_path = "/path/to/stockgpt_lora"
-    embedding_model_path = "/path/to/BGE-Large"
+def main(base_model_path="", lora_ckpt_path="", embedding_model_path=""):
+    print(f"base_model_path: {base_model_path}")
+    print(f"lora_ckpt_path: {lora_ckpt_path}")
+    print(f"embedding_model_path: {embedding_model_path}")
+
     faiss_config = {
         "news": {
             "INDEX_PATH": "data/database_sample/news",
@@ -211,4 +213,4 @@ def main():
     demo.launch()
 
 if __name__ == '__main__':
-    main()
+    Fire(main)

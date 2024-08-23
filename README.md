@@ -43,6 +43,8 @@ bash scripts/stage1_trend_prediction.sh
 
 Stage 2
 
+Firstly, download [ChatGLM2-6B](https://huggingface.co/THUDM/chatglm2-6b), [StockGPT-Stage2](https://huggingface.co/AlphaFin/StockGPT-Stage2), and [BGE-Large-zh](https://huggingface.co/BAAI/bge-large-zh) model checkpoints locally. Then, specify the local path of these ckpt in the file. Finally, execute the following command to run the code
+
 ```bash
 bash scripts/stage2_financial_qa.sh
 ```

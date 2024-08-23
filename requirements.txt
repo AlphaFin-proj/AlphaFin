@@ -9,3 +9,6 @@ annlite
 sentencepiece
 transformers==4.33.0
 torch==2.0.0
+sentence-transformers
+faiss-cpu
+fire
