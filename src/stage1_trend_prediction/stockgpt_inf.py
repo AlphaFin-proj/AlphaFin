@@ -50,46 +50,6 @@ def parse_args():
         help="Path to save output results",
         required=True,
     )
-    parser.add_argument(
-        "--num_beams",
-        type=int,
-        default=1,
-        help='Specify num of beams',
-    )
-    parser.add_argument(
-        "--num_beam_groups",
-        type=int,
-        default=1,
-        help='Specify num of beams',
-    )
-    parser.add_argument(
-        "--top_k",
-        type=int,
-        default=4,
-        help='Specify num of beams',
-    )
-    parser.add_argument(
-        "--penalty_alpha",
-        type=float,
-        default=0.6,
-        help='Specify num of beams',
-    )
-    parser.add_argument(
-        "--num_return_sequences",
-        type=int,
-        default=1,
-        help='Specify num of return sequences',
-    )
-    parser.add_argument(
-        "--max_new_tokens",
-        type=int,
-        default=1024,
-        help='Specify num of return sequences',
-    )
-    parser.add_argument("--language",
-                        type=str,
-                        default="English",
-                        choices=["English", "Chinese", "Japanese"])
 
     args = parser.parse_args()
 
