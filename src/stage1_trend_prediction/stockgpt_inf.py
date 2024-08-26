@@ -1,7 +1,3 @@
-# Copyright (c) Microsoft Corporation.
-# SPDX-License-Identifier: Apache-2.0
-
-# DeepSpeed Team
 import argparse
 import logging
 import torch
@@ -15,7 +11,6 @@ from transformers import (
     AutoModelForCausalLM,
     AutoTokenizer
 )
-from transformers.generation import GenerationConfig
 
 sys.path.append(
     os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
@@ -59,6 +54,8 @@ def ChatGLMPrompt(instruction, inputs):
     return f"[Round 1]\n\n问：{instruction}\n{inputs}\n\n答："
 
 def prompt_eval(args, model, tokenizer, data):
+    fw = open(args.output_path, 'a+')
+
     for prompt in data:
 
         print("========== Prompt =========")
@@ -78,14 +75,14 @@ def prompt_eval(args, model, tokenizer, data):
         # output = tokenizer.decode(pred.cpu()[0], skip_special_tokens=True)
         # if len(output) > len(input_text):
         #     output = output[len(input_text):]
+
         print(f'\n{output}\n')
 
-        print("====================prompt end=============================\n\n")
+        print("==================== Instance End =============================\n\n")
 
-        with open(args.output_path, 'a+') as f:
-            result = prompt
-            result.update({"stockgpt": output})
-            f.write(json.dumps(result) + '\n')
+        result = prompt
+        result.update({"StockGPT": output})
+        fw.write(json.dumps(result) + '\n')
 
 
 def main():
@@ -93,8 +90,7 @@ def main():
 
     tokenizer = AutoTokenizer.from_pretrained(args.model_name_or_path, trust_remote_code=True)
     model = AutoModelForCausalLM.from_pretrained(args.model_name_or_path, trust_remote_code=True)
-    model.generation_config = GenerationConfig.from_pretrained(args.model_name_or_path, trust_remote_code=True)
-    if len(args.lora_name_or_path) > 0:
+    if args.lora_name_or_path and os.path.exists(args.lora_name_or_path):
         model = PeftModel.from_pretrained(model, args.lora_name_or_path)
     device = torch.device('cuda:0')
 

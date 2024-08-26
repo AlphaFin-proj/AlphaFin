@@ -1,4 +1,3 @@
-from sqlalchemy import create_engine
 import pandas as pd
 import numpy as np
 from tqdm import tqdm
@@ -7,9 +6,9 @@ import json
 import os
 import matplotlib.pyplot as plt
 from utils import *
-from datetime import datetime
 import matplotlib.pyplot as plt
 from matplotlib.cm import get_cmap
+from fire import Fire
 plt.rcParams['font.sans-serif'] = ['SimHei']
 plt.rcParams['axes.unicode_minus'] = False 
 plt.rcParams['font.sans-serif'] = ['Arial Unicode MS']
@@ -17,9 +16,6 @@ plt.rcParams['font.sans-serif'] = ['Arial Unicode MS']
 plt.rcParams['font.sans-serif'] = ['SimHei']
 plt.rcParams['axes.unicode_minus'] = False
 
-today = datetime.strftime(datetime.now(), '%Y%m%d')
-start_date = '20100101'
-end_date = today
 
 path = os.getcwd()
 folder_path = path+'/db_file/'
@@ -92,23 +88,23 @@ def calculate_accuracy(df):
             accuracy_dict[column] = accuracy
     return accuracy_dict
 
-def main(llms_path, stockgpt_mldl_path, save_dir, file_name):
+def main(tushare_token, stockgpt_mldl_path, save_dir, file_name):
+    global pro
+    token = tushare_token
+    pro = ts.pro_api(token)
+
     多空类型 = '多空都可'  # 仅限做多,仅限做空 多空都可
     weight = '市值加权'  #市值加权,平均加权
 
-    dd2 = pd.read_excel(llms_path, engine='openpyxl')
     dd1 = pd.read_excel(stockgpt_mldl_path, engine='openpyxl')
 
     dd1['date'] = pd.to_datetime(dd1['date'])
-    dd2['date'] = pd.to_datetime(dd2['date'])
-    dd = pd.merge(dd1, dd2, on=['stock_name','date','ground_truth'], how='inner')
+    dd = dd1
     dd['stock_name'] = dd['stock_name'].replace('云海金属', '宝武镁业')
-    dd = dd.drop(['stock_code_y'], axis=1)
 
     dd = dd.rename(columns={'Transformers':'Bert','chatglm2_6b_greedy':'chatglm2','fingpt_greedy':'FinGPT','finma_greedy':'FinMA'})
 
     print(f"dd1: {dd1}")
-    print(f"dd2: {dd2}")
 
     accuracy = {}
 
@@ -146,12 +142,28 @@ def main(llms_path, stockgpt_mldl_path, save_dir, file_name):
 
 
     dd_stock = pro.stock_basic(exchange='')
+
+    # temporary patch: changes to some stock info
+    # TODO: remove tushare api dependencies
+    change_stock_name = {
+        "*ST东园": "东方园林",
+        "中交设计": "祁连山",
+        "广东建工": "粤水电",
+        "金牌家居": "金牌厨柜",
+        "*ST金科": "金科股份"
+    }
+    for k,v in change_stock_name.items():
+        dd_stock["name"] = dd_stock["name"].replace([k], v)
+    new_row = pd.Series(["000961.SZ", "000961", "中南建设", None, None, None, None, None, None, None], index=dd_stock.columns)
+    dd_stock = dd_stock.append(new_row.to_frame().T)
+
     name_code_dict = dict(zip(dd_stock['name'], dd_stock['ts_code']))
     code_name_dict = dict(zip(dd_stock['ts_code'], dd_stock['name']))
     codes = dd_stock[dd_stock['name'].isin(dd['stock_name'])]['ts_code'].tolist()
     dd['stock_code'] = dd['stock_name'].apply(lambda x: name_code_dict.get(x))
     dd['next_month'] = pd.to_datetime(dd['date']) + pd.offsets.DateOffset(months=1) + pd.offsets.MonthEnd(1)
 
+    print(f"\n[NOTICE] Loading db files, please wait a moment...\n")
     df_adj = get_data_by_sql(file_path, 'daily_adj', 'daily_adj', codes, '*')
     df_kline = get_data_by_sql(file_path, 'daily_kline', 'daily_kline', codes, '*')
     df_dailybasic = get_data_by_sql(file_path, 'dailybasic', 'dailybasic', codes,
@@ -265,8 +277,6 @@ def main(llms_path, stockgpt_mldl_path, save_dir, file_name):
     ax.set_ylabel('Accumulated returns',fontsize=12,fontweight='bold')
     plt.show()
 
-
-    # save_dir = './output/strategy_test/'
     os.makedirs(save_dir, exist_ok=True)
 
     plt.savefig(f"{save_dir}/{file_name}_{weight}.png", dpi=500)
@@ -279,9 +289,4 @@ def main(llms_path, stockgpt_mldl_path, save_dir, file_name):
     print('-----finish-----\n\n')
 
 if __name__ == '__main__':
-    llms_path = './output/other_llm.xlsx'
-    stockgpt_mldl_path = './output/stockgpt.xlsx'
-    save_dir = './output/strategy_result/'
-
-
-    main(llms_path, stockgpt_mldl_path, save_dir, "strategy_result")
+    Fire(main)

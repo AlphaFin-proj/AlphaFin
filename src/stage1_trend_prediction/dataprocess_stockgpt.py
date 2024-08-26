@@ -1,6 +1,6 @@
 import json
 import pandas as pd
-import os
+from fire import Fire
 
 def getGtUpDown(gt):
     """
@@ -102,10 +102,8 @@ def changeKey(d, old_k, new_k):
 def main(stockgpt_pred_path, mldl_pred_path, save_path):
     # 读取 StockGPT 在1000test上的推理结果 json 文件
     with open(stockgpt_pred_path, 'r') as f:
-        json_data = json.load(f)
-        # json_data = [json.loads(x) for x in f.readlines()]
+        json_data = [json.loads(x) for x in f.readlines()]
     json_data = [changeKey(x, 'output', 'ground_truth') for x in json_data]
-    json_data = [changeKey(x, 'model_prediction', 'StockGPT') for x in json_data]
 
     target_models = ['StockGPT']
 
@@ -203,9 +201,4 @@ def main(stockgpt_pred_path, mldl_pred_path, save_path):
     df_all.to_excel(save_path, index=False)
 
 if __name__ == '__main__':
-    stockgpt_pred_path = './output/stockgpt.json'
-    mldl_pred_path = "./output/mldl_prediction.xlsx"
-    save_dir = './output/'
-
-    save_path = os.path.join(save_dir, 'stockgpt.xlsx')
-    main(stockgpt_pred_path, mldl_pred_path, save_path)
+    Fire(main)

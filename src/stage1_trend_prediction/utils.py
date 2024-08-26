@@ -3,18 +3,15 @@ import numpy as np
 import tushare as ts
 from datetime import datetime
 import statsmodels.api as sm
-# from tqdm.notebook import tqdm
 from tqdm import tqdm
 from loguru import logger
 from sqlalchemy import create_engine
 import sqlalchemy
 import os
-from functools import lru_cache
 from itertools import accumulate
 import time
 
-token = ''
-pro = ts.pro_api(token)
+pro = None
 
 
 def get_ret_stats(df):

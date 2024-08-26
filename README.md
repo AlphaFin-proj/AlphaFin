@@ -37,13 +37,15 @@ pip install -r requirements.txt
 
 Stage 1
 
+Firstly, download [ChatGLM2-6B](https://huggingface.co/THUDM/chatglm2-6b) and [StockGPT-Stage1](https://huggingface.co/AlphaFin/StockGPT-Stage1) model checkpoints locally. Then, fill in your [tushare api token](https://tushare.pro/) and the local path of these ckpts in `scripts/stage1_trend_prediction.sh`. Finally, execute the following command to run the code
+
 ```bash
 bash scripts/stage1_trend_prediction.sh
 ```
 
 Stage 2
 
-Firstly, download [ChatGLM2-6B](https://huggingface.co/THUDM/chatglm2-6b), [StockGPT-Stage2](https://huggingface.co/AlphaFin/StockGPT-Stage2), and [BGE-Large-zh](https://huggingface.co/BAAI/bge-large-zh) model checkpoints locally. Then, specify the local path of these ckpt in the file. Finally, execute the following command to run the code
+Firstly, download [ChatGLM2-6B](https://huggingface.co/THUDM/chatglm2-6b), [StockGPT-Stage2](https://huggingface.co/AlphaFin/StockGPT-Stage2), and [BGE-Large-zh](https://huggingface.co/BAAI/bge-large-zh) model checkpoints locally. Then, specify the local path of these ckpts in `scripts/stage2_financial_qa.sh`. Finally, execute the following command to run the code
 
 ```bash
 bash scripts/stage2_financial_qa.sh
