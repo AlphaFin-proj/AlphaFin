@@ -96,3 +96,13 @@ If you use AlphaFin in your work, please cite our paper.
       primaryClass={cs.CL}
 }
 ```
+
+## 🚀 What's Next? (最新工作)
+
+We are excited to announce our next-generation project: **[AlphaTeam](https://github.com/jackyideal/AlphaTeam)**.
+
+While **AlphaFin** focuses on foundational data paradigms, LLM fine-tuning, and single-agent reasoning within the Stock-Chain framework, **AlphaTeam** represents a significant industrial-grade leap forward. 
+
+Building upon the insights gained here, AlphaTeam introduces a robust **Multi-Agent Collaboration Architecture** featuring adversarial auditing, causal assumption chains, and traceable visual workflows. It shifts the paradigm from simple Q&A to a trustworthy, controllable, and evolving quantitative research pipeline.
+
+👉 **Discover our latest work here: [AlphaTeam Repository](https://github.com/jackyideal/AlphaTeam)**
